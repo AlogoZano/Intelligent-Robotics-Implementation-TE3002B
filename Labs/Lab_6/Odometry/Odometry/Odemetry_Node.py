@@ -13,7 +13,6 @@ class Odometry_node(Node):
         self.publisher_displacement = self.create_publisher(Float32, 'displacement', qos_profile=rclpy.qos.qos_profile_sensor_data) #displacement
         self.publisher_Speed = self.create_publisher(Float32, 'linear_speed', qos_profile=rclpy.qos.qos_profile_sensor_data) #linear_speed
         self.publisher_GlobalPosition = self.create_publisher(Pose2D, 'global_position', qos_profile=rclpy.qos.qos_profile_sensor_data) #coordinates
-        #self.publisher_theta = self.create_publisher(Float32, 'theta', qos_profile=rclpy.qos.qos_profile_sensor_data) #coordinates
         self.publisher_AngularSpeed = self.create_publisher(Float32, 'angular_speed', qos_profile=rclpy.qos.qos_profile_sensor_data) #angular speed w
 
         self.msg_displacement = Float32()
