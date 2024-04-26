@@ -1,0 +1,2 @@
+path_rrt_b_2.txt_columna1 = [0.60, 1.17, 1.17, 1.02]
+path_rrt_b_2.txt_columna2 = [2.20, 2.32, 1.33, 0.35]
