@@ -110,18 +110,18 @@ class line_detection_node(Node):
 
         ### ref ###
         
-        img_canoso = cv2.Canny(img_blurred,20,30)
-        img_canny = cv2.morphologyEx(img_canoso, cv2.MORPH_CLOSE, kernel=self.kernel_erode)
+        img_canny = cv2.Canny(img_blurred,20,30)
+        img_lines = cv2.morphologyEx(img_canny, cv2.MORPH_CLOSE, kernel=self.kernel_erode)
         # img_dilated = cv2.dilate(img_canoso, self.kernel_dilated, 2)
         # img_canny = cv2.erode(img_dilated, self.kernel_erode, 1)
 
-        x1_ref = 0 
-        y1_ref = int(img_canny.shape[1]/2)
+        y1_ref = 0 
+        x1_ref = int(img_lines.shape[1]/2)
 
-        x2_ref = int(img_canny.shape[0])
-        y2_ref = int(img_canny.shape[1]/2)
+        y2_ref = int(img_lines.shape[0])
+        x2_ref = int(img_lines.shape[1]/2)
 
-        lines = cv2.HoughLinesP(img_canny,1,np.pi/180,10,10,20)
+        lines = cv2.HoughLinesP(img_lines,1,np.pi/180,10,10,20)
         i_max = 0
 
         if self.traffic_flag == True and self.hor_flag == False:
@@ -139,7 +139,7 @@ class line_detection_node(Node):
                 x2 = lines[i_max][0][2]
                 y2 = lines[i_max][0][3]
 
-                cv2.line(img_canny,(x1,y1),(x2,y2),(255,0,0),3)
+                cv2.line(img_lines,(x1,y1),(x2,y2),(255,0,0),3)
 
                 error = x2 - y2_ref
                 self.v_ang = -(self.k_p * error)
@@ -148,7 +148,7 @@ class line_detection_node(Node):
                 print("No hay lines :(")
                 self.v_ang = self.v_ang
 
-            cv2.line(img_canny,(y1_ref,x1_ref),(y2_ref,x2_ref),(255,0,0),3)
+            cv2.line(img_lines,(x1_ref,y1_ref),(x2_ref,y2_ref),(255,0,0),3)
 
             delta_y = np.abs(y2 - y1)
             delta_x = np.abs(x2 - x1)
@@ -164,7 +164,7 @@ class line_detection_node(Node):
             self.v_linear = 0.0
             self.v_ang = 0.0
 
-        self.msg_img_prop_frame = self.bridge_object.cv2_to_imgmsg(img_canny)
+        self.msg_img_prop_frame = self.bridge_object.cv2_to_imgmsg(img_lines)
 
     def timer_callback(self):
 
