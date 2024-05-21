@@ -1,5 +1,6 @@
 line_detection_node:
   ros__parameters:
+    brightness: 80
     k_p: 0.00015
     v_linear: 0.06
     min_y_length: 0

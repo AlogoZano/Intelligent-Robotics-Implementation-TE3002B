@@ -66,6 +66,7 @@ class line_detection_node(Node):
         self.max_y_length = self.get_parameter('max_y_length').get_parameter_value().integer_value
         self.min_x_length  = self.get_parameter('min_x_length').get_parameter_value().integer_value
         self.max_x_length = self.get_parameter('max_x_length').get_parameter_value().integer_value
+        self.brightness = self.get_parameter('brightness').get_parameter_value().integer_value
 
         # densities ##
         self.green_density = 0.0
@@ -103,7 +104,7 @@ class line_detection_node(Node):
 
         img_cropped = img_rotated[int((img_rotated.shape[0])*(3/4)):int((img_rotated.shape[0])), 1:int((img_rotated.shape[1]))]
 
-        M = np.ones(img_cropped.shape, dtype='uint8')*80
+        M = np.ones(img_cropped.shape, dtype='uint8')* self.get_parameter('v_linear').get_parameter_value().double_value
         img_added = cv2.add(img_cropped, M)
 
         img_blurred = cv2.GaussianBlur(img_added, (5,5),0)
@@ -112,8 +113,7 @@ class line_detection_node(Node):
         
         img_canny = cv2.Canny(img_blurred,20,30)
         img_lines = cv2.morphologyEx(img_canny, cv2.MORPH_CLOSE, kernel=self.kernel_erode)
-        # img_dilated = cv2.dilate(img_canoso, self.kernel_dilated, 2)
-        # img_canny = cv2.erode(img_dilated, self.kernel_erode, 1)
+
 
         y1_ref = 0 
         x1_ref = int(img_lines.shape[1]/2)
@@ -141,8 +141,8 @@ class line_detection_node(Node):
 
                 cv2.line(img_lines,(x1,y1),(x2,y2),(255,0,0),3)
 
-                error = x2 - y2_ref
-                self.v_ang = -(self.k_p * error)
+                error = x2_ref - x2
+                self.v_ang = self.k_p * error
                 self.v_linear = self.get_parameter('v_linear').get_parameter_value().double_value
             else:
                 print("No hay lines :(")
