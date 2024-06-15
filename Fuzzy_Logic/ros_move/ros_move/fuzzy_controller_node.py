@@ -36,7 +36,7 @@ class Fuzzy_Controller(Node):
         self.distances = []
         self.orientations = []
         self.lookup_table = {}
-        with open('/home/alogo/ros2_ws/src/ros_move/ros_move/lookup_table.csv', mode='r') as file:
+        with open('/home/isra/ros2_ws/src/ros_move/ros_move/modified_lookup_table.csv', mode='r') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 dist = float(row["distance"])
@@ -90,8 +90,8 @@ class Fuzzy_Controller(Node):
     def timer_callback(self):
         vel_lin, vel_ang = self.controller_routine()
         msg = "Linear: {}. Angular: {}".format(vel_lin, vel_ang)
-        self.ctrl_msg.linear.x = vel_lin*0.2
-        self.ctrl_msg.angular.z = -vel_ang*0.5
+        self.ctrl_msg.linear.x = vel_lin
+        self.ctrl_msg.angular.z = vel_ang
 
         self.robot_ctrl_pub.publish(self.ctrl_msg)
 
